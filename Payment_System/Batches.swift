@@ -24,6 +24,7 @@ class Batches:UIViewController,UITableViewDataSource,UITableViewDelegate {
    private var balCount = 0
    private var idCount = 0
     
+    @IBOutlet weak var FilterBar: UISearchBar!
     @IBOutlet weak var userLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var accountButt: UIButton!
@@ -34,6 +35,7 @@ class Batches:UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         accountButt.layer.borderWidth = 0.5
         accountButt.layer.borderColor = UIColor.black.cgColor
         propertyButt.layer.borderWidth = 0.5
@@ -55,8 +57,10 @@ class Batches:UIViewController,UITableViewDataSource,UITableViewDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "logedInn")
-        
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLogged")
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.orientationLock = .all
+        }
         print("Batches \(isUserLoggedIn)")
         if(!isUserLoggedIn) {
             performSegue(withIdentifier: "LoginController", sender: self)
@@ -155,7 +159,7 @@ class Batches:UIViewController,UITableViewDataSource,UITableViewDelegate {
 
     @IBAction func SettingsButton(_ sender: UIBarButtonItem) {
         
-        UserDefaults.standard.set(false, forKey: "logedInn")
+        UserDefaults.standard.set(false, forKey: "isUserLogged")
         UserDefaults.standard.removeObject(forKey: "CurrentUser")
         UserDefaults.standard.removeObject(forKey: "CurrentUserPassword")
         self.performSegue(withIdentifier: "LoginController", sender: self)

@@ -98,6 +98,7 @@
 		F43C362F1ECEE2920007D47A /* Payment_System */ = {
 			isa = PBXGroup;
 			children = (
+				F43C36341ECEE2920007D47A /* Main.storyboard */,
 				F44965091EE14D4800E05EA3 /* TableViewCells */,
 				F43C36461ECEF5840007D47A /* Supporting files */,
 				F43C36441ECEF53A0007D47A /* Controller */,
@@ -117,7 +118,6 @@
 		F43C36431ECEF5330007D47A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				F43C36341ECEE2920007D47A /* Main.storyboard */,
 			);
 			name = View;
 			sourceTree = "<group>";

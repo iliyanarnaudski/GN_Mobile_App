@@ -16,18 +16,14 @@ class LoginController: UIViewController {
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var loginBut: UIButton!
     
-    
-    
-    
-
-    @IBAction func disKeyboard(_ sender: UIBarButtonItem) {
-        
-        self.view.endEditing(true)
-
-    }
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.orientationLock = .portrait
+        }
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
         loginBut.layer.cornerRadius = 5
         loginBut.layer.borderWidth = 1
     }
@@ -76,7 +72,7 @@ class LoginController: UIViewController {
                 else
                 {
                     print("Success connection")
-                    UserDefaults.standard.set(true, forKey: "logedInn")
+                    UserDefaults.standard.set(true, forKey: "isUserLogged")
                     UserDefaults.standard.set(username, forKey: "CurrentUser")
                     UserDefaults.standard.set(password,forKey:"CurrentUserPassword")
                     self.dismiss(animated: true, completion: nil)
@@ -87,6 +83,10 @@ class LoginController: UIViewController {
         }
     }
     
+    //Calls this function when the tap is recognized.
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     @IBAction func LogIn(_ sender: UIButton) {
         performLogIn()
@@ -106,6 +106,7 @@ class LoginController: UIViewController {
         self.present(alert,animated: true,completion: nil)
     }
     
-
 }
+
+
 

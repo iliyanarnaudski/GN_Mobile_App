@@ -25,7 +25,6 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
     var id = " "
     var end_Date = ""
     var start_Date = ""
-    var holder = ""
     var typeArray = [String]()
     var balanceArray = [Double]()
     var totalArray = [Double]()
@@ -34,9 +33,10 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
     var issueDateArray = [String]()
     var forwardBalance:Double = 0.0
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var docLbl: UILabel!
-    @IBOutlet weak var totalLbl: UILabel!
-    @IBOutlet weak var balanceLbl: UILabel!
+ 
+    @IBOutlet weak var docButton: UIButton!
+    @IBOutlet weak var totalButton: UIButton!
+    @IBOutlet weak var balanceButton: UIButton!
 
     @IBOutlet weak var endBalanceField: UILabel!
     @IBOutlet weak var beginingBalanceField: UILabel!
@@ -54,21 +54,42 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
         }
 
     }
+   
+    @IBAction func DateFiltering(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Enter start and end dates", message: "In format yyyy-mm-dd", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.text = ""
+        }
+        alert.addTextField(configurationHandler: {
+            (textField1) in
+            textField1.text = ""
+        })
+        
+        alert.addAction(UIAlertAction(title: "Filter", style: .default, handler: { [weak alert] (_) in
+            let textField = alert!.textFields![0]
+            let textField1 = alert!.textFields![1]
+            
+            print("Text field: \(textField.text!)")
+            
+            print(textField1.text!)
+        }))
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler:nil))
 
-
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        docButton.layer.borderWidth = 0.5
+        docButton.layer.borderColor = UIColor.black.cgColor
+        totalButton.layer.borderWidth = 0.5
+        totalButton.layer.borderColor = UIColor.black.cgColor
+        balanceButton.layer.borderWidth = 0.5
+        balanceButton.layer.borderColor = UIColor.black.cgColor
         
-        docLbl.layer.borderWidth = 0.5
-        docLbl.layer.borderColor = UIColor.black.cgColor
-        
-        
-        totalLbl.layer.borderWidth = 0.5
-        totalLbl.layer.borderColor = UIColor.black.cgColor
-        
-       
-        balanceLbl.layer.borderWidth = 0.5
-        balanceLbl.layer.borderColor = UIColor.black.cgColor
         print(id)
         downloadJsonWithTask()
 
@@ -84,7 +105,7 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "clientCell") as! ClientCell
         cell.docNum.text = docNumArray[indexPath.row]
-        if appliedArray[indexPath.row] == "FullyPaid" {
+        if appliedArray[indexPath.row] == "FullyPaid" || appliedArray[indexPath.row] == "FullyApplied" {
             cell.applied.text = appliedArray[indexPath.row]
             cell.applied.textColor = UIColor.green
         } else {
@@ -139,11 +160,11 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
                         let myJson = try JSONSerialization.jsonObject(with: content, options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject
                         if let accStatement = myJson["cssc:AccountStatement"] as? NSDictionary {
                             
-                            if let account = accStatement["cssc:Account"] as? NSDictionary {
+                            /*if let account = accStatement["cssc:Account"] as? NSDictionary {
                                 if let holder = account["cssc:Holder"] as? NSDictionary {
                                     self.holder = holder["$"]! as! String
                                 }
-                            }
+                            }*/
                             
                             
                             if let startDate = accStatement["ct:StartDate"] as? NSDictionary{
@@ -236,7 +257,7 @@ class Client_Report:UIViewController,UITableViewDataSource,UITableViewDelegate {
                                         self.endBalanceField.text = String(format:"%.2f", self.balanceArray.last!)
                                         self.startDateField.text = self.start_Date
                                         self.endDateField.text = self.end_Date
-                                        self.holderField.text = self.holder
+                                        
                                     }
                                     OperationQueue.main.addOperation({
                                      self.tableView.reloadData()
